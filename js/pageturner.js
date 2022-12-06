@@ -11,12 +11,12 @@ $(window).on("load", function(){
     function hideAll(){ //Hide all pages except P1
         for (var i = 1; i < pages.length; i++){
             $(pages[i]).hide();
-        }
+        };
     };
 
     function nextPage(){ //Turn to next page
         if (cnt < (pages.length-1)){ //If not on last page
-            $(pages[cnt]).hide();
+            $(pages[cnt]).fadeOut("fast");
             cnt++;
             $(pages[cnt]).fadeIn("fast");
             $(window).scrollTop(0);
@@ -28,7 +28,7 @@ $(window).on("load", function(){
 
     function prevPage(){//Turn to previous page
         if (cnt > 0){ //If not on last page
-            $(pages[cnt]).hide();
+            $(pages[cnt]).fadeOut("fast");
             cnt--;
             $(pages[cnt]).fadeIn("fast");
             $(window).scrollTop(0);
