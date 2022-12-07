@@ -8,10 +8,12 @@ $(window).on("load", function(){
     $("#next").on("click", nextPage);
     $("#prev").on("click", prevPage);
 
-    function hideAll(){ //Hide all pages except P1
+    function hideAll(){ //Hide all pages and pop ups except P1
         for (var i = 1; i < pages.length; i++){
             $(pages[i]).hide();
-        };
+        }
+        $("#popupNext").hide();
+        $("#popupPrev").hide();
     };
 
     function nextPage(){ //Turn to next page
@@ -21,8 +23,10 @@ $(window).on("load", function(){
             $(pages[cnt]).fadeIn("fast");
             $(window).scrollTop(0);
         }
-        else {
-            window.alert("You're already on the last page.");
+        else { //Show pop up
+            $("#popupNext").fadeIn("fast")
+            setTimeout(() => {$("#popupNext").fadeOut("fast")}, 3000);
+            //window.alert("You're already on the last page.");
         };
     };
 
@@ -34,7 +38,9 @@ $(window).on("load", function(){
             $(window).scrollTop(0);
         }
         else {
-            window.alert("You're already on the first page.");
+            //window.alert("You're already on the first page.");
+            $("#popupPrev").fadeIn("fast")
+            setTimeout(() => {$("#popupPrev").fadeOut("fast")}, 3000);
         };
     };
 
