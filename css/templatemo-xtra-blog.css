@@ -224,7 +224,7 @@ ul {
     transition: all 0.3s ease;
 }
 
-.tm-btn-primary {    
+.tm-btn-primary {
     background-color: #0CC;
     color: white;  
     padding: 8px 43px;
@@ -266,6 +266,8 @@ ul {
     background-color: rgb(85, 83, 83);
     color: white;
     cursor: not-allowed;
+    padding: 8px 43px;
+    border: none;
 }
 
 .tm-external-link { color: #0CC; }
@@ -657,3 +659,24 @@ a:hover figcaption { color: #056767; }
       transform: rotate(0deg);
     }
   }
+
+/* The actual popup */
+.popup .popuptext {
+    width: 160px;
+    background-color: #555;
+    color: #fff;
+    border-radius: 6px;
+    padding: 8px 0;
+  }
+
+  .popup .popuptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+  }
+ 
