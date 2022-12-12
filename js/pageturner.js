@@ -25,7 +25,7 @@ $(window).on("load", function(){
         }
         else { //Show pop up
             $("#popupNext").fadeIn("fast")
-            setTimeout(() => {$("#popupNext").fadeOut("fast")}, 3000);
+            setTimeout(() => {$("#popupNext").fadeOut("fast")}, 1000);
             //window.alert("You're already on the last page.");
         };
     };
@@ -40,7 +40,7 @@ $(window).on("load", function(){
         else {
             //window.alert("You're already on the first page.");
             $("#popupPrev").fadeIn("fast")
-            setTimeout(() => {$("#popupPrev").fadeOut("fast")}, 3000);
+            setTimeout(() => {$("#popupPrev").fadeOut("fast")}, 1000);
         };
     };
 
