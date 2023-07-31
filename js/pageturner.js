@@ -2,9 +2,18 @@ $(window).on("load", function(){
 
     pages=[".trois", ".deux", ".une"]; //Add more as I write more
 
-    var cnt = 0; //Page count
+    var cnt = 0; //Page count, could be replaced with indexOf() but I'm lazy
 
     hideAll();
+    
+    const lastPage = localStorage.getItem("lastPage"); //Pull last page from local storage
+    if (lastPage){ //If last page exists
+        cnt = lastPage; //Set cnt so the pop up still works
+        $(pages[0]).hide(); //Hide page 1
+        $(pages[lastPage]).show(); //Show last page
+        $(window).scrollTop(0);
+    };
+
     $("#next").on("click", nextPage);
     $("#prev").on("click", prevPage);
 
@@ -22,27 +31,35 @@ $(window).on("load", function(){
             cnt++;
             $(pages[cnt]).fadeIn("fast");
             $(window).scrollTop(0);
+            localStorage.setItem("lastPage", cnt);
+            console.log("Updated last page");
         }
         else { //Show pop up
             $("#popupNext").fadeIn("fast")
             setTimeout(() => {$("#popupNext").fadeOut("fast")}, 1000);
-            //window.alert("You're already on the last page.");
         };
     };
 
     function prevPage(){//Turn to previous page
-        if (cnt > 0){ //If not on last page
+        if (cnt > 0){ //If not on first page
             $(pages[cnt]).fadeOut("fast");
             cnt--;
             $(pages[cnt]).fadeIn("fast");
             $(window).scrollTop(0);
+            localStorage.setItem("lastPage", cnt);
+            console.log("Updated last page");
         }
-        else {
-            //window.alert("You're already on the first page.");
+        else { //Show pop up
             $("#popupPrev").fadeIn("fast")
             setTimeout(() => {$("#popupPrev").fadeOut("fast")}, 1000);
         };
     };
 
+    window.addEventListener("beforeunload", () => {
+        const isWindowClosing = !event.currentTarget.performance.navigation.type; //Deprecated, might not be available inthe future
+        if (isWindowClosing){
+            localStorage.removeItem("lastPage");
+        }
+    });
 
 });
