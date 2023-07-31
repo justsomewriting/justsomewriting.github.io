@@ -8,3 +8,5 @@ The current status of this web is: Online
 The current status of this site is: Updating
 
 Have a look around. Make yourself at home. This place rarely get visitors.
+
+If you ever need to, you can find me on wechat or shoot me an email at suruiquan10@163.com
