@@ -1,6 +1,6 @@
 $(window).on("load", function(){
 
-    pages=[".deux", ".une"]; //Add more as I write more
+    pages=[".trois", ".deux", ".une"]; //Add more as I write more
 
     var cnt = 0; //Page count
 
