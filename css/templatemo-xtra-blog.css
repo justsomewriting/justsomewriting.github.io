@@ -71,6 +71,10 @@ hr {
 
 .tm-post { max-width: 470px; }
 
+.tm-post a:hover{
+    text-decoration: underline;
+}
+
 .tm-row {
     max-width: 980px;
     justify-content: space-between;
@@ -679,4 +683,4 @@ a:hover figcaption { color: #056767; }
     border-style: solid;
     border-color: #555 transparent transparent transparent;
   }
- 
+  
