@@ -32,7 +32,7 @@ $(window).on("load", function(){
             $(pages[cnt]).fadeIn("fast");
             $(window).scrollTop(0);
             sessionStorage.setItem("lastPage", cnt);
-            console.log("Updated last page");
+            //console.log("Updated last page");
         }
         else { //Show pop up
             $("#popupNext").fadeIn("fast")
@@ -47,7 +47,7 @@ $(window).on("load", function(){
             $(pages[cnt]).fadeIn("fast");
             $(window).scrollTop(0);
             sessionStorage.setItem("lastPage", cnt);
-            console.log("Updated last page");
+            //console.log("Updated last page");
         }
         else { //Show pop up
             $("#popupPrev").fadeIn("fast")
