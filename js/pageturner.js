@@ -6,7 +6,7 @@ $(window).on("load", function(){
 
     hideAll();
     
-    const lastPage = localStorage.getItem("lastPage"); //Pull last page from local storage
+    const lastPage = sessionStorage.getItem("lastPage"); //Pull last page from local storage
     if (lastPage){ //If last page exists
         cnt = lastPage; //Set cnt so the pop up still works
         $(pages[0]).hide(); //Hide page 1
@@ -31,7 +31,7 @@ $(window).on("load", function(){
             cnt++;
             $(pages[cnt]).fadeIn("fast");
             $(window).scrollTop(0);
-            localStorage.setItem("lastPage", cnt);
+            sessionStorage.setItem("lastPage", cnt);
             console.log("Updated last page");
         }
         else { //Show pop up
@@ -46,7 +46,7 @@ $(window).on("load", function(){
             cnt--;
             $(pages[cnt]).fadeIn("fast");
             $(window).scrollTop(0);
-            localStorage.setItem("lastPage", cnt);
+            sessionStorage.setItem("lastPage", cnt);
             console.log("Updated last page");
         }
         else { //Show pop up
@@ -54,12 +54,5 @@ $(window).on("load", function(){
             setTimeout(() => {$("#popupPrev").fadeOut("fast")}, 1000);
         };
     };
-
-    window.addEventListener("beforeunload", () => {
-        const isWindowClosing = !event.currentTarget.performance.navigation.type; //Deprecated, might not be available inthe future
-        if (isWindowClosing){
-            localStorage.removeItem("lastPage");
-        }
-    });
 
 });
