@@ -1,6 +1,6 @@
 $(window).on("load", function(){
 
-    pages=[".cinq", ".quatre", ".trois", ".deux", ".une"]; //Add more as I write more
+    pages=[".six", ".cinq", ".quatre", ".trois", ".deux", ".une"]; //Add more as I write more
 
     var cnt = 0; //Page count, could be replaced with indexOf() but I'm lazy
 
