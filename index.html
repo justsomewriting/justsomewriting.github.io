@@ -607,16 +607,20 @@
                     <hr>
                 </article>
             </section>
-            
-            <button class="mb-2 tm-btn tm-btn-primary float-left tm-prev-next" id="prev">Prev</button>
-                
-            <button class="mb-2 tm-btn tm-btn-primary float-right tm-prev-next" id="next">Next</button>
+              
+            <div class="pager-wrapper" aria-label="Page navigation">
+                <button class="mb-2 tm-btn tm-btn-primary tm-prev-next" id="prev" type="button">Prev</button>
+
+                <div id="pageNumbers" class="pager" role="navigation" aria-label="Pages"></div>
+
+                <button class="mb-2 tm-btn tm-btn-primary tm-prev-next" id="next" type="button">Next</button>
+            </div>
                 
                                
             <br><br>
 
-            <span class="popuptext float-left" id="popupPrev">You're already on the first page.</span>
-            <span class="popuptext float-right" id="popupNext">You're already on the last page.</span>
+            <!-- <span class="popuptext float-left" id="popupPrev">You're already on the first page.</span>
+            <span class="popuptext float-right" id="popupNext">You're already on the last page.</span> -->
             
             <br>
         </main>

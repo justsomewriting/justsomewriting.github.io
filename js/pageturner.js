@@ -14,6 +14,9 @@ $(window).on("load", function(){
         $(window).scrollTop(0);
     };
 
+    buildPager();
+    updatePagerUI();
+
     $("#next").on("click", nextPage);
     $("#prev").on("click", prevPage);
 
@@ -25,6 +28,42 @@ $(window).on("load", function(){
         $("#popupPrev").hide();
     };
 
+    function buildPager(){
+        var $p = $("#pageNumbers");
+        $p.empty();
+        for (var i = 0; i < pages.length; i++){
+            var $el = $("<span>")
+                .addClass("page-num")
+                .attr("data-idx", i)
+                .text(i+1);
+            if (i === cnt) $el.addClass("active");
+            $p.append($el);
+        }
+        // click handler
+        $p.on("click", ".page-num", function(){
+            var idx = parseInt($(this).attr("data-idx"), 10);
+            goToPage(idx);
+        });
+    }
+
+    function updatePagerUI(){
+        $("#pageNumbers .page-num").removeClass("active")
+            .filter(function(){ return parseInt($(this).attr("data-idx"),10) === cnt; })
+            .addClass("active");
+    }
+
+    function goToPage(target){ //navigate directly to a given page index
+        if (target === cnt) return;
+        if (target < 0 || target >= pages.length) return;
+        $(pages[cnt]).fadeOut("fast", function(){
+            cnt = target;
+            $(pages[cnt]).fadeIn("fast");
+            $(window).scrollTop(0);
+            sessionStorage.setItem("lastPage", cnt);
+            updatePagerUI();
+        });
+    }
+
     function nextPage(){ //Turn to next page
         if (cnt < (pages.length-1)){ //If not on last page
             $(pages[cnt]).fadeOut("fast");
@@ -32,6 +71,7 @@ $(window).on("load", function(){
             $(pages[cnt]).fadeIn("fast");
             $(window).scrollTop(0);
             sessionStorage.setItem("lastPage", cnt);
+            updatePagerUI();
             //console.log("Updated last page");
         }
         else { //Show pop up
@@ -47,6 +87,7 @@ $(window).on("load", function(){
             $(pages[cnt]).fadeIn("fast");
             $(window).scrollTop(0);
             sessionStorage.setItem("lastPage", cnt);
+            updatePagerUI();
             //console.log("Updated last page");
         }
         else { //Show pop up

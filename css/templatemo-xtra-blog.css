@@ -666,14 +666,24 @@ a:hover figcaption { color: #056767; }
 
 /* The actual popup */
 .popup .popuptext {
-    width: 160px;
-    background-color: #555;
+    position: fixed;
+    bottom: 68px; /* slightly above pager */
+    left: 50%;
+    transform: translateX(-50%) translateX(var(--offset, 0));
+    padding: 8px 12px;
+    background: rgba(0,0,0,0.82);
     color: #fff;
     border-radius: 6px;
-    padding: 8px 0;
-  }
+    display: none;
+    z-index: 1250;
+    white-space: nowrap;
+    font-weight: 600;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.18);
+    pointer-events: none;
+}
 
-  .popup .popuptext::after {
+
+.popup .popuptext::after {
     content: "";
     position: absolute;
     top: 100%;
@@ -682,5 +692,67 @@ a:hover figcaption { color: #056767; }
     border-width: 5px;
     border-style: solid;
     border-color: #555 transparent transparent transparent;
-  }
+}
   
+.pager-wrapper {
+    position: fixed;
+    left: 50%;
+    bottom: 18px;
+    transform: translateX(-50%);
+    z-index: 1200;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 12px;
+    border-radius: 10px;
+    pointer-events: auto;
+}
+
+.pager {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.page-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    height: 40px;
+    padding: 0 10px;
+    border-radius: 6px;
+    background: #000;
+    color: #fff;
+    cursor: pointer;
+    font-weight: 700;
+    user-select: none;
+    border: 1px solid rgba(255,255,255,0.08);
+    transition: background .12s ease, transform .08s ease, box-shadow .12s ease;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+}
+
+.page-num.active {
+    background: #007bff;        /* match .tm-btn-primary */
+    color: #fff;
+    border-color: #0069d9;
+    box-shadow: 0 6px 18px rgba(0,123,255,0.12);
+}
+.page-num.active:hover {
+    background: #0069d9;
+    color: #fff;
+    transform: none;
+}
+
+/* larger Prev/Next so they balance the pager */
+.pager-wrapper .tm-prev-next {
+    min-width: 96px;
+    padding: 10px 16px;
+    font-size: 16px;
+    border-radius: 8px;
+}
+
+@media (max-width: 480px) {
+    .page-num { min-width: 32px; height: 32px; font-size: 14px; }
+    .pager-wrapper .tm-prev-next { min-width: 72px; padding: 8px 12px; font-size: 14px; }
+}
