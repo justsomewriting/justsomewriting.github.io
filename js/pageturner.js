@@ -20,6 +20,43 @@ $(window).on("load", function(){
     $("#next").on("click", nextPage);
     $("#prev").on("click", prevPage);
 
+    // position pager under .tm-main (centered relative to main content, not whole page)
+    function positionPager(){
+        var $main = document.querySelector('.tm-main');
+        var $pager = document.querySelector('.pager-wrapper');
+        var popupPrev = document.getElementById('popupPrev');
+        var popupNext = document.getElementById('popupNext');
+
+        if (!$main || !$pager) return;
+
+        var rect = $main.getBoundingClientRect();
+        // centerX relative to viewport
+        var centerX = rect.left + (rect.width / 2);
+
+        // apply to fixed elements (use px; keep translateX(-50%) so left is center)
+        $pager.style.left = Math.round(centerX) + 'px';
+        if (popupPrev) popupPrev.style.left = Math.round(centerX) + 'px';
+        if (popupNext) popupNext.style.left = Math.round(centerX) + 'px';
+    }
+
+    // debounce helper for resize
+    var _posTimer = null;
+    function schedulePosition(){
+        if (_posTimer) clearTimeout(_posTimer);
+        _posTimer = setTimeout(function(){
+            positionPager();
+            _posTimer = null;
+        }, 80);
+    }
+
+    // Call after building UI so sizes exist
+    positionPager();
+    // keep centered on resize
+    window.addEventListener('resize', schedulePosition);
+    // If the template has a nav toggle that changes layout, also reposition when it's clicked
+    var navToggle = document.querySelector('.navbar-toggler');
+    if (navToggle) navToggle.addEventListener('click', function(){ setTimeout(positionPager, 220); });
+
     function hideAll(){ //Hide all pages and pop ups except P1
         for (var i = 1; i < pages.length; i++){
             $(pages[i]).hide();
@@ -44,12 +81,17 @@ $(window).on("load", function(){
             var idx = parseInt($(this).attr("data-idx"), 10);
             goToPage(idx);
         });
+
+        // ensure position recalculated because pager width changed
+        positionPager();
     }
 
     function updatePagerUI(){
         $("#pageNumbers .page-num").removeClass("active")
             .filter(function(){ return parseInt($(this).attr("data-idx"),10) === cnt; })
             .addClass("active");
+        // when UI changes, keep pager centered
+        positionPager();
     }
 
     function goToPage(target){ //navigate directly to a given page index
