@@ -7,10 +7,14 @@ $(window).on("load", function(){
     hideAll();
     
     const lastPage = sessionStorage.getItem("lastPage"); //Pull last page from local storage
-    if (lastPage){ //If last page exists
-        cnt = lastPage; //Set cnt so the pop up still works
+    if (lastPage !== null){ //If last page exists
+        var lastIdx = parseInt(lastPage, 10);
+        if (isNaN(lastIdx) || lastIdx < 0 || lastIdx >= pages.length) {
+            lastIdx = 0;
+        }
+        cnt = lastIdx; //Set cnt so the pop up still works
         $(pages[0]).hide(); //Hide page 1
-        $(pages[lastPage]).show(); //Show last page
+        $(pages[cnt]).show(); //Show last page
         $(window).scrollTop(0);
     };
 
