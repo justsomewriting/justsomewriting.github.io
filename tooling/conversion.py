@@ -227,7 +227,8 @@ class DocxToHtmlConverter:
                 music_path=audio_path if has_music else None,
                 music_title=self.music_title.get() if has_music else None,
                 music_musician=self.music_musician.get() if has_music else None,
-                art_credit=self.art_credit.get()
+                art_credit=self.art_credit.get(),
+                docx_path=os.path.relpath(self.input_path.get())
             )
             
             # Create output directory if it doesn't exist
