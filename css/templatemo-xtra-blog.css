@@ -71,6 +71,11 @@ hr {
 
 .tm-post { max-width: 470px; }
 
+.tm-post-full {
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .tm-post a:hover{
     text-decoration: underline;
 }
