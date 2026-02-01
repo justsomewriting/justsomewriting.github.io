@@ -17,6 +17,7 @@ class DocxToHtmlConverter:
         self.image_width = tk.StringVar(value="554")
         self.image_height = tk.StringVar(value="335")
         self.art_credit = tk.StringVar()
+        self.art_credit_link = tk.StringVar()
         
         # Music recommendation (optional)
         self.music_title = tk.StringVar()
@@ -111,22 +112,29 @@ class DocxToHtmlConverter:
         tk.Entry(self.root, textvariable=self.art_credit, width=20).grid(
             row=12, column=1, sticky="w", padx=10, pady=5
         )
+
+        tk.Label(self.root, text="Art Credit Link", font=("Arial", 10)).grid(
+            row=13, column=0, sticky="w", padx=10, pady=5
+        )
+        tk.Entry(self.root, textvariable=self.art_credit_link, width=20).grid(
+            row=13, column=1, sticky="w", padx=10, pady=5
+        )
         
         # Convert Button
         tk.Button(
             self.root, text="Convert", command=self.convert, 
             bg="#4CAF50", fg="white", font=("Arial", 12, "bold"), 
             width=20, height=2
-        ).grid(row=13, column=0, columnspan=3, pady=20)
+        ).grid(row=14, column=0, columnspan=3, pady=20)
         
         # Log/Status Area
         tk.Label(self.root, text="Status Log:", font=("Arial", 10, "bold")).grid(
-            row=14, column=0, sticky="w", padx=10, pady=5
+            row=15, column=0, sticky="w", padx=10, pady=5
         )
         self.log_text = scrolledtext.ScrolledText(
             self.root, height=10, width=80, state="disabled"
         )
-        self.log_text.grid(row=15, column=0, columnspan=3, padx=10, pady=5)
+        self.log_text.grid(row=16, column=0, columnspan=3, padx=10, pady=5)
     
     def browse_input(self):
         filename = filedialog.askopenfilename(
@@ -228,6 +236,7 @@ class DocxToHtmlConverter:
                 music_title=self.music_title.get() if has_music else None,
                 music_musician=self.music_musician.get() if has_music else None,
                 art_credit=self.art_credit.get(),
+                art_credit_link=self.art_credit_link.get(),
                 docx_path=os.path.relpath(self.input_path.get())
             )
             
