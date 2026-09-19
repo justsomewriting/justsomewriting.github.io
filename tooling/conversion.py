@@ -198,7 +198,7 @@ class DocxToHtmlConverter:
                 value = None
         return bool(value)
 
-    def run_to_html(self, run):
+    def run_to_html(self, run, suppress_bold=False):
         text = run.text
         if not text:
             return ""
@@ -206,12 +206,14 @@ class DocxToHtmlConverter:
         text = html_lib.escape(text)
         if self._run_flag(run, "italic"):
             text = f"<em>{text}</em>"
-        if self._run_flag(run, "bold"):
+        if self._run_flag(run, "bold") and not suppress_bold:
             text = f"<strong>{text}</strong>"
         return text
 
-    def _is_centered(self, para):
-        """Centered directly, or through the paragraph style / its base styles."""
+    def _get_alignment(self, para):
+        """'center', 'right', or None - checked on the paragraph, then its
+        style and base styles, since alignment is often set via style rather
+        than direct formatting."""
         alignment = para.paragraph_format.alignment
         style = para.style
         depth = 0
@@ -222,13 +224,29 @@ class DocxToHtmlConverter:
             except Exception:
                 break
             depth += 1
-        return alignment == WD_ALIGN_PARAGRAPH.CENTER
+        if alignment == WD_ALIGN_PARAGRAPH.CENTER:
+            return "center"
+        if alignment == WD_ALIGN_PARAGRAPH.RIGHT:
+            return "right"
+        return None
 
-    def paragraph_to_html(self, para, collect_footnotes=True):
+    def _is_all_bold(self, para):
+        """True when every run with visible text in this paragraph is bold.
+
+        Used to treat a fully-bolded paragraph as a section title/subtitle.
+        A paragraph with only some bold words (emphasis inside a normal
+        sentence) is left as inline <strong> instead.
+        """
+        runs = [r for r in para.runs if r.text and r.text.strip()]
+        if not runs:
+            return False
+        return all(self._run_flag(r, "bold") for r in runs)
+
+    def paragraph_to_html(self, para, collect_footnotes=True, suppress_bold=False):
         """Convert one paragraph's runs to HTML, inserting footnote markers."""
         parts = []
         for run in para.runs:
-            parts.append(self.run_to_html(run))
+            parts.append(self.run_to_html(run, suppress_bold=suppress_bold))
             if not collect_footnotes:
                 continue
             for ref in run._element.findall(qn('w:footnoteReference')):
@@ -361,6 +379,8 @@ class DocxToHtmlConverter:
             buffer = []        # consecutive normal paragraphs
             paragraph_count = 0
             centered_count = 0
+            right_count = 0
+            heading_count = 0
 
             def flush_buffer():
                 if buffer:
@@ -368,26 +388,56 @@ class DocxToHtmlConverter:
                     buffer.clear()
 
             for para in doc.paragraphs[1:]:
-                para_html = self.paragraph_to_html(para)
+                alignment = self._get_alignment(para)   # 'center' / 'right' / None
+                is_heading = self._is_all_bold(para)     # fully-bold paragraph = section title
+
+                # A fully-bold paragraph with no explicit alignment of its own
+                # defaults to centered, since that's how a section title/subtitle
+                # normally reads. An explicit right/center alignment on a bold
+                # paragraph is still respected as the author set it.
+                if is_heading and alignment is None:
+                    alignment = "center"
+
+                # Headings get their bold from the CSS class instead of an
+                # inline <strong> per run, so multiple runs don't produce
+                # redundant nested tags.
+                para_html = self.paragraph_to_html(para, suppress_bold=is_heading)
                 if not para_html.strip():  # Only add non-empty paragraphs
                     continue
                 paragraph_count += 1
-                if self._is_centered(para):
-                    centered_count += 1
+
+                if is_heading or alignment:
                     flush_buffer()
-                    # A <span> with display:block is valid inside a <p>, unlike a
-                    # <div>. Swap for <div class="centered"> if your template puts
-                    # {{ content }} somewhere block elements are allowed.
+                    classes = []
+                    styles = ["display:block"]
+                    if alignment == "center":
+                        classes.append("centered")
+                        styles.append("text-align:center")
+                        centered_count += 1
+                    elif alignment == "right":
+                        classes.append("right-aligned")
+                        styles.append("text-align:right")
+                        right_count += 1
+                    if is_heading:
+                        classes.append("section-title")
+                        # Inline fallback in case the template's CSS hasn't
+                        # been updated with a .section-title rule yet.
+                        styles.append("font-weight:bold")
+                        heading_count += 1
+                    class_attr = " ".join(classes)
+                    style_attr = ";".join(styles)
                     blocks.append(
-                        '<span class="centered" style="display:block;'
-                        f'text-align:center;">{para_html}</span>'
+                        f'<span class="{class_attr}" style="{style_attr};">{para_html}</span>'
                     )
                 else:
                     buffer.append(para_html)
             flush_buffer()
 
             content = "<br><br>".join(blocks)
-            self.log(f"Extracted {paragraph_count} paragraphs ({centered_count} centered)")
+            self.log(
+                f"Extracted {paragraph_count} paragraphs "
+                f"({centered_count} centered, {right_count} right-aligned, {heading_count} section titles)"
+            )
 
             footnotes_html = self.build_footnotes_html()
             if self.footnote_order:
