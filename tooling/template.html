@@ -16,6 +16,35 @@
 	<link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap" rel="stylesheet">
     <link href="../css/bootstrap.min.css" rel="stylesheet">
     <link href="../css/templatemo-xtra-blog.css" rel="stylesheet">
+    <style>
+        /* Jumping to and from a footnote */
+        html { scroll-behavior: smooth; }
+
+        /* The little number in the body text */
+        sup.footnote-ref { font-size: 0.7em; line-height: 0; }
+        sup.footnote-ref a { color: inherit; text-decoration: none; }
+        sup.footnote-ref a:hover { text-decoration: underline; }
+
+        /* The note list at the end of the post */
+        .footnotes-sep {
+            border: 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+            margin: 2.5rem 0 1rem;
+        }
+        .footnotes {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 0.9rem;
+            color: white;
+        }
+        .footnotes ol { padding-left: 1.5rem; margin-bottom: 0; }
+        .footnotes li { margin-bottom: 0.6rem; }
+        .footnotes li:target { background: rgba(255, 255, 255, 0.12); }
+        .footnotes a.footnote-back { color: inherit; text-decoration: none; margin-left: 0.3rem; }
+        .footnotes a.footnote-back:hover { text-decoration: underline; }
+
+        /* Paragraphs that were centred in the .docx */
+        .centered { margin: 0.4rem 0; }
+    </style>
 </head>
 <body>
 
@@ -79,9 +108,17 @@
                 <div class="tm-post-full">                    
                     <div class="mb-4" style="font-family:'Times New Roman', Times, serif; font-size:medium">
                         <h2 class="pt-2 tm-color-primary tm-post-title">{{ title }}</h2>
+
+                        <!-- Article body -->
                         <p style="font-family: 'Times New Roman', Times, serif; font-size: medium; color:white;">
                             <br>{{ content|safe }}
-                            <br><br>
+                        </p>
+
+                        <!-- Footnotes: outside the paragraph above, so the <ol> is valid HTML -->
+                        {% if has_footnotes %}{{ footnotes|safe }}{% endif %}
+
+                        <!-- Credits and download -->
+                        <p style="font-family: 'Times New Roman', Times, serif; font-size: medium; color:white;">
                             Art Credit: <a href="{{ art_credit_link }}">{{ art_credit }}</a>
                             <br><br>
                             <a href="{{ docx_path }}" target="_blank">Click Me for Document Download as .docx File</a>
